@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="S1126Generator.MessageMapper" >
+  <resultMap id="BaseResultMap" type="S1126Generator.Message" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="sex" property="sex" jdbcType="CHAR" />
+    <result column="education" property="education" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="school" property="school" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="INTEGER" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from message
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="S1126Generator.Message" >
+    insert into message (id, name, age, 
+      sex, education, phone, 
+      school, email)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, 
+      #{sex,jdbcType=CHAR}, #{education,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{school,jdbcType=VARCHAR}, #{email,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="S1126Generator.Message" >
+    update message
+    set name = #{name,jdbcType=VARCHAR},
+      age = #{age,jdbcType=INTEGER},
+      sex = #{sex,jdbcType=CHAR},
+      education = #{education,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      school = #{school,jdbcType=VARCHAR},
+      email = #{email,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, name, age, sex, education, phone, school, email
+    from message
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, name, age, sex, education, phone, school, email
+    from message
+  </select>
+</mapper>

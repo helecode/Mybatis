@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE  configuration  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!-- 配置信息 -->
+<configuration>
+	<!-- 引入属性文件 -->
+	<properties resource="jdbc.properties"></properties>
+	<!-- 配置全局配置文件 -->
+	<settings>
+	<!-- 开启缓存 -->
+		<setting name="cacheEnabled" value="true"/>
+		<!-- 延迟加载 -->
+		<setting name="lazyLoadingEnabled" value="true"/>
+		<!-- 使用标签代替列名 -->
+		<setting name="useColumnLabel" value="true"/>
+		<!-- 设置超时时间 -->
+		<setting name="defaultStatementTimeout" value="200"/>
+		<!-- 开始驼峰命名规则 -->
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+
+		<!-- 给类设置别名 -->
+	<typeAliases>
+		<typeAlias type="S1122HelloWorld.S1Message" alias="message"/>
+		<package name="S1122HelloWorld"/>
+	</typeAliases>
+		<!-- 配置拦截器 -->
+	<plugins>
+		<plugin interceptor="S1127Inteceptor.S1Interceptor">
+		<property name="paasword" value="123456"/>
+		</plugin>
+		<!-- 配置pageHelper分页插件 -->
+		<plugin interceptor="com.github.pagehelper.PageInterceptor">
+			<property name="helperDialect" value="mysql"/><!--如果使用mysql，这里value为mysql-->
+            <property name="pageSizeZero" value="true"/>
+		</plugin>
+	</plugins>
+	<environments default="mysql">
+		<!-- id指定数据库的厂商 -->
+		<environment id="mysql">
+			<transactionManager type="JDBC"></transactionManager>
+			<dataSource type="POOLED">
+				<property name="driver" value="${mysql_driver}"/>
+				<property name="url" value="${mysql_url}"/>
+				<property name="username" value="${mysql_username}"/>
+				<property name="password" value="${mysql_password}"/>
+				<property name="poolMaximumActiveConnections" value="20"/>
+			</dataSource>
+		</environment>	
+	</environments>
+	
+		<!-- 根据不同的数据库厂商执行不同的语句 -->
+	<databaseIdProvider type="DB_VENDOR">
+		<property name="MySQL" value="mysql"/>
+		<property name="Oracle" value="oracle"/>
+		<property name="SQL Server" value="sqlServer"/>
+	</databaseIdProvider>
+	<!-- 引入SQL映射文件，Mapper映射文件 -->
+	<mappers>
+	<!-- 	<mapper resource="S1122HelloWorld/S2MessageMapper.xml"/> -->
+		<package name="S1122HelloWorld"/>
+	</mappers>
+
+</configuration>

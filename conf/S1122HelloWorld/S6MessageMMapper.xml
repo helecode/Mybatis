@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="S1122HelloWorld.S6MessageMMapper">
+
+
+
+	<!-- 通过设置别名和association标签 -->
+	<select id="displayMessageM" resultMap="messageMSet">
+		select m.id,m.name,m.age,m.sex,m.education,m.phone,m.school,e.id eid,e.name ename from message m , email e where m.email = e.id 
+	</select>
+	<resultMap type="messageM" id="messageMSet">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="age" column="age"/>
+		<result property="sex" column="sex"/>
+		<result property="education" column="education"/>
+		<result property="phone" column="phone"/>
+		<result property="school" column="school"/>
+		<association  fetchType="lazy"  property="email" javaType="S1122HelloWorld.S4Email" >
+			<id property="id" column="eid"/>
+			<result property="name" column="ename"/>
+		</association>
+	</resultMap>
+	<!-- 通过 外键属性.属性的形式 -->
+	<select id="displayMessageM2" resultMap="messageMMap">
+		select m.id,m.name,m.age,m.sex,m.education,m.phone,m.school,e.id eid,e.name ename from message m , email e where m.email = e.id 
+	</select>
+	<resultMap type="messageM" id="messageMMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="age" column="age"/>
+		<result property="sex" column="sex"/>
+		<result property="education" column="education"/>
+		<result property="phone" column="phone"/>
+		<result property="school" column="school"/>
+		<result property="email.id" column="eid"/>
+		<result property="email.name" column="ename"/>
+	</resultMap>
+	<!-- 通过association分段查询 -->
+	<select id="dislayMessageMA" resultMap="messageMAMap">
+				select m.id,m.name,m.age,m.sex,m.education,m.phone,m.school,m.email from message m  
+	</select>
+	<resultMap type="messageM" id="messageMAMap">
+		<id property="id" column="mid"/>
+		<result property="name" column="mname"/>
+		<result property="age" column="age"/>
+		<result property="sex" column="sex"/>
+		<result property="education" column="education"/>
+		<result property="phone" column="phone"/>
+		<result property="school" column="school"/>
+		<association property="email" column="email" select="S1122HelloWorld.S8EmailMapper.selectEmail"></association>
+		<!-- 可传递多列值用逗号分隔开 -->
+		<!-- <association property="email" column="{email=memail}" select="S1122HelloWorld.S8EmailMapper.selectEmail"></association> -->
+	</resultMap>
+	
+
+	<select id="selectMessageMById" resultMap="EmailMessageMSet">
+		select m.id,m.name,m.age,m.sex,m.education,m.phone,m.school,e.id eid,e.name ename from message m , email e where m.email = e.id and e.id=#{id} 
+	</select>
+	<resultMap type="messageM" id="EmailMessageMSet">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="age" column="age"/>
+		<result property="sex" column="sex"/>
+		<result property="education" column="education"/>
+		<result property="phone" column="phone"/>
+		<result property="school" column="school"/>
+	</resultMap>
+</mapper>

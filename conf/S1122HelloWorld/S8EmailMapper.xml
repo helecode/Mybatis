@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="S1122HelloWorld.S8EmailMapper">
+	<cache eviction="LRU" size="10000" flushInterval="6000000" readOnly="true"></cache>
+	<select id="selectEmail" parameterType="int"  resultType="email" >
+		select * from email where id=#{id}
+	</select>
+	<select id="selectEamilByIdMessage" parameterType="int"  resultMap="emailMap" >
+		select m.id mid,m.name mname,m.age,m.sex,m.education,m.phone,m.school,e.id eid,e.name ename from message m , email e where m.email = e.id  and e.id=#{id}
+	</select>
+	<resultMap type="S1122HelloWorld.S4Email" id="emailMap">
+		<id property="id" column="eid"/>
+		<result property="name" column="ename"/>
+		<collection property="messageMSet" ofType="message">
+			<id property="id" column="mid"/>
+			<result property="name" column="mname"/>
+			<result property="age" column="age"/>
+			<result property="sex" column="sex"/>
+			<result property="education" column="education"/>
+			<result property="phone" column="phone"/>
+			<result property="school" column="school"/>
+		</collection>
+	</resultMap>
+	
+	<select id="selectEamilByIdMessageFenBu" parameterType="int"  resultMap="emailFenBuMap" >
+		select m.id mid,m.name mname,m.age,m.sex,m.education,m.phone,m.school,e.id eid,e.name ename from message m , email e where m.email = e.id  and e.id=#{id}
+	</select>
+	<resultMap type="S1122HelloWorld.S4Email" id="emailFenBuMap">
+		<id property="id" column="eid"/>
+		<result property="name" column="ename"/>
+		<collection property="messageMSet" column="eid" javaType="java.util.Set" ofType="S1122HelloWorld.S5MessageM"  select="S1122HelloWorld.S6MessageMMapper.selectMessageMById"></collection>
+	</resultMap>
+	
+	<select id="dynamicSelectEamil" resultType="email">
+		select * from email 
+		<where>
+			<if test="id!=null&amp;&amp;id!=&quot;&quot;">
+				and id=#{id}
+			</if>
+			<if test="name!=null&amp;&amp;name!=&quot;&quot;">
+				and name=#{name}
+			</if>
+		</where>
+	</select>
+	
+	<select id="dynamicSelectEamilTrim" resultType="email">
+		select * from email 
+		<trim prefix="where" prefixOverrides="and">
+			<if test="id!=null&amp;&amp;id!=&quot;&quot;">
+				and id=#{id}
+			</if>
+			<if test="name!=null&amp;&amp;name!=&quot;&quot;">
+				and name=#{name}
+			</if>
+		</trim>	
+	</select>
+	
+	<update id="dynamicSelectEamilSet">
+		update email
+		<set>
+			<if test="name.trim()!=null&amp;&amp;name.trim()!=&quot;&quot;">
+				name=#{name},
+			</if>
+		</set>
+			where id=#{id}
+	</update>
+	
+	<select id="dynamicSelectEamilChoose" resultType="email">
+		select * from email where 1=1
+		<choose>
+			<when test="id!=null&amp;&amp;id!=&quot;&quot;">
+				and id=#{id}
+			</when>
+			<otherwise>
+				and name=#{name}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="dynamicSelectEamilForeach" resultType="email">
+		select * from email 
+		<foreach collection="list" open="where id in (" close=")" separator="," item="eid">
+			#{eid}
+		</foreach>
+	</select>
+	
+</mapper>

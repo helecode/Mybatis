@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 采用接口编程，namespace指定要对应接口 -->
+	<mapper namespace="S1122HelloWorld.S2MessageMapper">
+		<!-- 按id来查询:id名称必须要和接口中对应的方法名一致 -->
+		<select id="findMessage" parameterType="int"  resultType="S1122HelloWorld.S1Message" >
+			select * from Message where id=#{id}
+		</select>
+		
+		<select id="displayMessage" resultType="message" databaseId="mysql" >
+			select * from Message
+		</select>
+		<!-- 添加记录 -->
+		<insert id="addMessage" parameterType="message"  useGeneratedKeys="true"  keyProperty="id" databaseId="mysql">
+			insert into message(name,age,sex,education,phone,school)values(#{name},#{age},#{sex},#{education},#{phone},#{school})
+		</insert>
+		<!-- 修改记录 -->
+		<update id="updateMessage" parameterType="message" databaseId="mysql">
+			update Message set name=#{name},age=#{age} where id=#{id} 
+		</update>
+		<!-- 删除记录 -->
+		<delete id="deleteMessage" parameterType="int"  databaseId="mysql">
+			delete from Message where id=#{id}
+		</delete>
+		
+		<!-- 参数传递 -->
+		<!-- 通过下标引用 -->
+		<select id="selectMessage" resultType="message">
+			select * from message where name=#{0} and age=#{1}
+		</select>
+		<!-- 通过注解入参命名参数引用 -->
+		<select id="selectMessageMM" resultType="message">
+			select * from message where name=#{name} and age=#{age}
+		</select>
+		<!-- 将参数都封装在Map中 -->
+		<select id="selectMessageMap" resultType="message">
+			select * from message where name=#{name} and age=#{age}
+		</select>
+		
+		<!-- #（预编译）和$（拼接）的区别 -->
+		<select id="selectMessageMapPJ" resultType="message" >
+			select * from message where name=${name} and age=${age}
+		</select>
+		<!-- 使用resultMap指定属性名对应的字段名 -->
+		<select id="selectMessageMapResultMap" parameterType="message" resultMap="messageMap" >
+			select * from message where name=${name} and age=${age}
+		</select>
+		<resultMap type="message" id="messageMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="age" column="age"/>
+		<result property="sex" column="sex"/>
+		<result property="education" column="education"/>
+		<result property="phone" column="phone"/>
+		<result property="school" column="school"/>
+		</resultMap>
+	</mapper>
